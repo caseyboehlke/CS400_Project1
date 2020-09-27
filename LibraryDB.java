@@ -60,6 +60,13 @@ public class LibraryDB {
     }
     else return false;
   }
+  public boolean checkIn(String title) {
+    if (!(isBookAvailable(title))) {
+      db.get(title).setCheckedIn();
+      return true;
+    }
+    else return false;
+  }
 }
   
 // change the book check out status

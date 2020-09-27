@@ -19,9 +19,8 @@ public class LibraryTD {
 		return foo.put(title, temp);
 	}
 	
-	public String getBook(String key) { 
-		return ("Title: " + foo.get(key).getTitle() + "\nISBN: " + foo.get(key).getIsbn()
-		+ "\nAuthor: " + foo.get(key).getAuthor() + "\nGenre: " + foo.get(key).getGenre());
+	public Book retrieveBook(String key) { 
+		return foo.get(key);
 	}
 	
 	public int librarySize() {

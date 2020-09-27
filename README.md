@@ -1,4 +1,4 @@
-# CS400_Project1 - READ HERE BEFORE UPLOADING!
+# CS400_Project1 - Read Here Before Uploading!
 
 - ONLY UPLOAD files that's specific to your role. DO NOT add files like HashTableMap.java and similar files.
 - Make sure to add HEADERS to your file. 

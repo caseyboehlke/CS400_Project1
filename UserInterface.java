@@ -1,3 +1,10 @@
+// --== CS400 File Header Information ==--
+// Name: ABHIJEET MANOHAR
+// Email: amanohar@wisc.edu
+// Team: CB
+// TA: Yeping Wang
+// Lecturer: Gary
+
 import java.util.Scanner;
 
 public class UserInterface {

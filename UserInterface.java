@@ -1,139 +1,182 @@
-import java.util.Scanner;
+// --== CS400 File Header Information ==--
+// Name: Lindsay Dyjach
+// Email: ldyjach@wisc.edu
+// Team: CB
+// TA: Yeping
+// Lecturer: Gary Dahl
+// Notes to Grader: <optional extra notes>
 
+import java.util.Scanner; 
+/**
+ * @author Lindsay
+ *
+ */
 public class UserInterface {
+  public static HashTableMap<String, String> library = new HashTableMap<String, String>();
+  public UserInterface() {
+    System.out.println("Welcome to the CB CS 400 library database!");
+    System.out.println("");
+    mainMenu();
+  }
 
-	//Create a new interface
-	public UserInterface() {
-		//Header 
-		System.out.println("Welcome to Library Database at UW-Madison!\n");
-		
-		//Menu
-		menu();
-	}
-	
-	public static void menu() {
-		Scanner scan = new Scanner(System.in);
-		String input ="";
-		System.out.println("Are you a librarian (L) or a student(S)? : ");
-		input = scan.next();
-		if(input.charAt(0) == 'L') 
-			menuLibrarian();
-		else
-			menuStudents();
-	}
-	
-	public static void menuLibrarian() {
-		Scanner sc = new Scanner(System.in);
-		System.out.println("\n"
-				+ "Librarian Mode ON..");
-		System.out.println("1. Add a book");
-		System.out.println("2. Modify a book"); //Moddify a book.
-		System.out.println("3. Delete a book");
-		int input = 0;
-		System.out.println("Enter your choice: ");
-		input = sc.nextInt();
-		switch(input) {
-			case 1: addABook();break;
-			case 2: removeABook(); break;
-		}
-	}
-	
-	public static void menuStudents() {
-		Scanner sc = new Scanner(System.in);
-		System.out.println("\n Student Mode ON..");
-		System.out.println("1. Retrieve a book"); 
-		System.out.println("2. Check out a book");
-		System.out.println("3. Drop off book");
-		int input = 0;
-		System.out.println("Enter your choice: ");
-		input = sc.nextInt();
-		switch(input) {
-			case 1: retrieveABook();break;
-			case 2: checkoutABook(); break;
-			case 3: dropOffABook(); 
-		}
-	}
-	
-	public static void addABook() {
-		//@BACKEND - int getlibrarySize() should return the size of the library.
-		Scanner sc = new Scanner(System.in);
-		System.out.println("\nNum of Books in Library: "+getLibrarySize());
-		
-		System.out.println("\nEnter book title: "); //BOOK TITLE
-		String bookTitle = sc.nextLine();
-		System.out.println("Enter author name: ");  //AUTHOR NAME
-		String authorName = sc.nextLine();
-		System.out.println("Enter genre name: ");   //GENRE 
-		String genre = sc.nextLine();
-		System.out.println("Enter Book Description"); //BOOK DESCRIPTION
-		String description = sc.nextLine();
-		System.out.println("Enter ISBN number: ");  //ISBN NUMBER
-		int ISBN = sc.nextInt();
-		
-		//@BACKEND - create boolean addBook()
-		if(addBook(bookTitle, authorName, genre, description, ISBN))
-			System.out.println("Book added successfully!! You are a genius..");
-		else
-			System.out.println("Sorry! I think the book title already exist..");
-		
-		System.out.println("\nNum of Books in Library: "+getLibrarySize()+"\n");
-		menu();
-	}
-	
-	public static void removeABook() {
-		System.out.println("\nEnter exact book title to remove : ");
-		Scanner sc = new Scanner(System.in);
-		String bookRemove = sc.nextLine();
-		//@BACKEND - Need boolean removeBook()
-		if(removeBook(bookRemove))
-			System.out.println("Book Removed");
-		else
-			System.out.println("Book doesn't exist in the library!");
-		
-		menu();
-	}
-	
-	public static void retrieveABook() {
-		System.out.println("\nEnter book title to retrieve : ");
-		Scanner sc = new Scanner(System.in);
-		String retrieveBook = sc.nextLine();
-		//@BACKEND - Need boolean retrieveBook()
-		if(retrieveBook(retrieveBook))
-			System.out.println("Book Removed");
-		else
-			System.out.println("Book doesn't exist in the library!");
-		
-		menu();
-	}
-	
-	public static void checkoutABook() {
-		System.out.println("\nEnter book title to checkout : ");
-		Scanner sc = new Scanner(System.in);
-		String checkoutBookTitle = sc.nextLine();
-		//@BACKEND - boolean checkoutBook()
-		if(checkoutBook(checkoutBookTitle))
-			System.out.println("Book Checked Out for you. Enjoy!");
-		else
-			System.out.println("Sorry! Book is already checked out.");
-		
-		menu();
-	}
-	
-	public static void dropOffABook() {
-		System.out.println("\nEnter book title to dropoff : ");
-		Scanner sc = new Scanner(System.in);
-		String dropoffBookTitle = sc.nextLine();
-		//@BACKEND - boolean checkoutBook()
-		if(dropOffBook(dropoffBookTitle))
-			System.out.println("Book checked in! Thanks for using the library!");
-		else
-			System.out.println("Sorry! Book couldn't be checked in back.");
-		
-		menu();		
-	}
-	
-	public static void main(String args[]) {
-		//@BACKEND - Instance of Backend class name.
-		LibraryDB library = new LibraryDB();
-	}
+
+  
+  public static void mainMenu() {
+    System.out.println("MAIN MENU: ");
+    Scanner scan = new Scanner(System.in); 
+    String userInput = "";
+    System.out.println("Are you a librarian or a student? Enter (L) for librarian or (S) for student.");
+    userInput = scan.next();
+    if (userInput.charAt(0) == 'L') {
+      studentMenu();
+    }
+    else {
+      librarianMenu();
+    }
+    
+    
+  }
+  
+  public static void studentMenu() {
+    Scanner scan = new Scanner(System.in); 
+    int userInput;
+    System.out.println("STUDENT MENU: ");
+    System.out.println("1) Search for book details");
+    System.out.println("2) Check out status"); 
+    System.out.println("3) End session");
+    System.out.println("Choose the corresponding number to the function you would like to perform.");
+    userInput = scan.nextInt();
+    scan.nextLine();
+    switch(userInput) {
+    case 1: searchBook();
+    break;
+    case 2: checkOutStatus();
+    break;
+    case 3: mainMenu();
+    }
+  }
+  
+  public static void librarianMenu() {
+    Scanner scan = new Scanner(System.in); 
+    int userInput;
+    System.out.println("LIBRARIAN MENU: ");
+    System.out.println("1) Add a book");
+    System.out.println("2) Remove a book");
+    System.out.println("3) End session");
+    System.out.println("Choose the corresponding number to the function you would like to perform.");
+    userInput = scan.nextInt();
+    scan.nextLine();
+    switch(userInput) {
+    case 1: addBook();
+    break;
+    case 2: removeBook();
+    break;
+    case 3: mainMenu();
+    }
+  }
+  
+  private static void searchBook() {
+    System.out.println("Type in the tile of the book you are looking for.");
+    Scanner scan = new Scanner(System.in);
+    String bookTitle = scan.nextLine();
+    if(retrieveBook(bookTitle)) {
+ System.out.println("The book was found in the library!");
+    studentMenu();
+    }
+    else {
+      System.out.println("Sorry, the book was not found.")
+      studentMenu();
+    }
+  
+  }
+  //get rid of checkout and change once actual interface given
+  private static void checkOutStatus()
+  {
+    Scanner scan = new Scanner(System.in);
+    String bookTitle = scan.nextLine();
+    //check if the book is checked out by calling isCheckedOut
+    if (!(checkoutBook(bookTitle))) {
+      System.out.println("Would you like to check this book out? Type (Y) for yes and (N) for no.");
+      String userInput = "";
+      userInput = scan.next();
+   
+    if (userInput.charAt(0) == 'Y') {
+      checkoutBook(bookTitle);
+      System.out.println("Your book is now checked out."); //boolean checked out should be updated if that's a thing
+      System.out.println("");
+      studentMenu();
+    }
+    else {
+      System.out.println("Sorry! The book is already checked out.");
+      studentMenu();
+    }
+   
+  }
+  }
+  private static void returnBook() {
+    Scanner scan = new Scanner(System.in);
+    System.out.println("What is the name of the book you'd like to return?");
+    String bookTitle = scan.nextLine();
+    if(dropOffBook(bookTitle)) {
+    System.out.println(bookTitle + " successfully returned."); //boolean checked out should be updated if that's a thing
+  //code should update boolean somewhere
+    studentMenu();
+    }
+    else {
+      System.out.println("Problems occured when returning the book. Please try again later.");
+      studentMenu();
+    }
+  }
+
+  private static void addBook() {
+    System.out.println("There are " + getLibrarySize() + " books in the library. Type in the tile of the book you are looking for.");
+    Scanner scan = new Scanner(System.in);
+    System.out.println("\nPlease add the following information about the book to the database");
+    System.out.println("Book title: ");
+    String bookTitle = scan.nextLine();
+    System.out.println("Author name: ");
+    String authorName = scan.nextLine();
+    System.out.println("Genre: ");
+    String genre = scan.nextLine();
+    System.out.println("ISBN Number: ");
+    int ISBNNumber = scan.nextInt();
+
+    
+    if (addBook(bookTitle, authorName, genre, ISBNNumber)) {
+      System.out.println("The book was added successfully.");
+    } else {
+      System.out.println("This book is already in the library!");
+    }
+    System.out.println("There are now" + getLibrarySize() + " books in the library.");
+    librarianMenu();
+  }
+  private static void removeBook() {
+    Scanner scan = new Scanner(System.in);
+    Scanner scan2 = new Scanner(System.in);
+    System.out.println("Enter the name of the book to be removed.");
+    String bookTitle = scan.nextLine();
+    System.out.println("Are you sure you would like to remove this book from the database? Type (Y) for yes and (N) for no.");
+    String userInput = scan2.nextLine();
+    if (userInput.charAt(0) == 'Y') {
+        if(removeBook(bookTitle)) {
+        System.out.println("The book was removed successfully.");
+        librarianMenu();
+        }
+        else {
+          System.out.println("The library does not contain that book.");
+        }
+    }  
+    else {
+      librarianMenu(); 
+    }
+  }
+  
+ 
+  public static void main(String[] args) {
+    //implement back end interface in front end/instance of backend class
+  LibraryDB library = new LibraryDB();
+  }
+
+
+  
 }

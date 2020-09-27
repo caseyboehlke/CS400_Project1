@@ -20,7 +20,7 @@ public class Book {
   private String author;
   private boolean checkedIn;
   private String genre;
-  private String description;
+  
 
 
   /*
@@ -73,7 +73,7 @@ public class Book {
 
   }
 
-  public boolean getChekedIn() {
+  public boolean getCheckedIn() {
 
     return this.checkedIn;
 
@@ -82,7 +82,7 @@ public class Book {
   /*
    * changes whether the book is checked in or not
    */
-  public void setChekedIn() {
+  public void setCheckedIn() {
 
      if (this.checkedIn == true) {
        this.checkedIn = false;
@@ -97,6 +97,19 @@ public class Book {
   public String getGenre() {
 
     return this.genre;
+  }
+
+
+  public String getString() {
+
+    String str = "";
+
+    str = str + "Ttile: " + getTitle() + System.lineSeparator() + "Author: " + getAuthor()
+        + System.lineSeparator() + "Genre: " + getGenre() + System.lineSeparator() + "ISBN: "
+        + getIsbn() + System.lineSeparator() + "Checked In: " + getCheckedIn();
+
+    return str;
+    
   }
 
 

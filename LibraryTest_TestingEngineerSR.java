@@ -10,7 +10,8 @@ public class LibraryTest {
     public static void main(String[] args) {
         System.out.println("bookTest: " + bookTest());
         System.out.println("getBookTest: " + getBookTest());
-        System.out.println("checkoutBookTest: " + checkoutBookTest());
+        System.out.println("checkOutBookTest: " + checkOutBookTest());
+        System.out.println("checkInBookTest: " + checkInBookTest());
     }
 
     /**
@@ -18,18 +19,17 @@ public class LibraryTest {
      * @return false if the test fails, true otherwise
      */
     public static boolean bookTest() {
-        Book myBook = new Book( "The Great Gatsby", 439594, "Fitzgerald",
-                true,"Classic", "The main character dies");;
+        Book myBook = new Book( "The Great Gatsby", "Fitzgerald","Classic",439594,true);
 
         // 1. Get values the Book was created with
         // Author name
-        if(!myBook.getAuthorName().equals("Fitzgerald")) {
+        if(!myBook.getAuthor().equals("Fitzgerald")) {
             System.out.println("The author name that was returned did not match the name the Book was " +
                     "created with");
             return false;
         }
         // book title
-        if(!myBook.getBookTitle().equals("The Great Gatsby")) {
+        if(!myBook.getTitle().equals("The Great Gatsby")) {
             System.out.println("The book title that was returned did not match the title the Book was " +
                     "created with");
             return false;
@@ -47,64 +47,24 @@ public class LibraryTest {
             return false;
         }
         // checked in/out
-        // TODO: Make sure logic still holds
-        if(myBook.getCheckedIn()) {
-            System.out.println("The checkedOut status that was returned was true before the Book has" +
-                    "been checked out");
-            return false;
-        }
-        // description
-        if(!myBook.getDescription().equals("The main character dies")) {
-            System.out.println("The description that was returned did not match the description the Book was " +
-                    "created with");
+        if(!myBook.getCheckedIn()) {
+            System.out.println("The checkedIn status that was returned was false before the value was changed");
             return false;
         }
 
-        // 2. Set values and make sure the Book is updated accordingly
-        myBook.setAuthorName("Dan Brown");
-        // Author name
-        if(!myBook.getAuthorName().equals("Dan Brown")) {
-            System.out.println("The author name that was returned did not match the name the Book was " +
-                    "updated with");
+        // 2. Set checkedIn and make sure the Book is updated accordingly
+        myBook.setCheckedIn();
+        if(myBook.getCheckedIn()) {
+            System.out.println("The checkedIn status that was returned was true after the Book's status" +
+                    "was changed to false");
             return false;
         }
-        // book title
-        myBook.setBookTitle("DaVinci Code");
-        if(!myBook.getBookTitle().equals("DaVinci Code")) {
-            System.out.println("The book title that was returned did not match the title the Book was " +
-                    "updated with");
-            return false;
-        }
-        // ISBN number
-        myBook.setIsbn(93845);
-        if(myBook.getIsbn() != 93845) {
-            System.out.println("The isbn number that was returned did not match the number the Book was " +
-                    "updated with");
-            return false;
-        }
-        // genre
-        myBook.setGenre("Fiction");
-        if(!myBook.getGenre().equals("Fiction")) {
-            System.out.println("The genre that was returned did not match the genre the Book was " +
-                    "updated with");
-            return false;
-        }
-        // checked in/out
-        // TODO: Make sure logic still holds
-        myBook.setCheckedOut(true);
+        myBook.setCheckedIn();
         if(!myBook.getCheckedIn()) {
-            System.out.println("The checkedOut status that was returned was false after the Book's status" +
+            System.out.println("The checkedIn status that was returned was false after the Book's status" +
                     "was changed to true");
             return false;
         }
-        // description
-        myBook.setDescription("Historical adventure of the Church and its adversaries");
-        if(!myBook.getDescription().equals("Historical adventure of the Church and its adversaries")) {
-            System.out.println("The description that was returned did not match the description the Book was " +
-                    "updated with");
-            return false;
-        }
-
         return true;
     }
 
@@ -114,62 +74,113 @@ public class LibraryTest {
      */
     public static boolean getBookTest() {
         // 1. Try to get an existing Book
-        Library myLibrary = new Library();
-        Book book1 = new Book( "book1", 1, "author1", true,
-                "genre1", "description1");
-        Book book2 = new Book( "book2", 2, "author2", true,
-                "genre2", "description2");
-        if(!book1.equals(myLibrary.getBook("book1"))) {
-            System.out.println("Trying to get Book1 returned a different value than expected");
+        LibraryDB myLibrary = new LibraryDB();
+        Book a = new Book("Frankenstein", "Mary Shelley", "Fiction", 111, true);
+        Book b = new Book("King Lear", "William Shakespeare", "Drama", 222, true);
+        if(!a.getAuthor().equals(myLibrary.getBook("Frankenstein").getAuthor())) {
+            System.out.println("Trying to get Frankenstein returned a different value than expected");
             return false;
         }
-        if(!book2.equals(myLibrary.getBook("book2"))) {
-            System.out.println("Trying to get Book2 returned a different value than expected");
+        if(!b.getAuthor().equals(myLibrary.getBook("King Lear").getAuthor())) {
+            System.out.println("Trying to get King Lear returned a different value than expected");
             return false;
         }
         // 2. Try to get a nonexistent Book
-        if(myLibrary.getBook("book4") != null) {
-            System.out.println("Trying to get a nonexistent Book returned a non-null value");
+        try {
+            if (myLibrary.getBook("someBook") != null) {
+                System.out.println("Trying to get a nonexistent Book returned a non-null value");
+                return false;
+            }
+        }
+        catch (Exception e) {
+            System.out.println("Trying to get a nonexistent Book threw an unexpected exception");
+            e.printStackTrace();
             return false;
         }
         return true;
     }
 
     /**
-     * FOR BACK END DEVELOPERS: Tests the checkoutBook functionality
+     * FOR BACK END DEVELOPERS: Tests the isBookAvailable and checkOut functionality
      * @return false if the test fails, true otherwise
      */
-    public static boolean checkoutBookTest() {
-        Library myLibrary = new Library();
-        Book book1 = myLibrary.getBook("book1");
+    public static boolean checkOutBookTest() {
+        LibraryDB myLibrary = new LibraryDB();
         // 1. Make sure checking out a Book twice is not possible
-        myLibrary.checkOutBook("book1");
-        if(!book1.getCheckedIn()) {
-            // TODO: Make sure logic still is correct
-            System.out.println("Book variable checkedOut is still false after the Book is checked out");
+        // Check inital status
+        if(!myLibrary.isBookAvailable("Heart of Darkness")) {
+            System.out.println("isBookAvailable returns false with an available Book");
             return false;
         }
-        // 2. Make sure checking out a Book twice is not possible
+        if(!myLibrary.checkOut("Heart of Darkness")) {
+            System.out.println("checkOut return false when checking out an available Book");
+            return false;
+        }
+        // Check status after checkOut
+        if (myLibrary.isBookAvailable("Heart of Darkness")) {
+            System.out.println("isBookAvailable says Book is still available after it has been checked out");
+            return false;
+        }
+        // Check out for a second time
         try {
-            myLibrary.checkOutBook("book1");
-            System.out.println("Checking out Book for a second time does not throw an Exception");
-            return false;
+            if(myLibrary.checkOut("Heart of Darkness")) {
+                System.out.println("Trying to check out Book for a second time returns true");
+                return false;
+            }
         }
-        catch (IllegalStateException e1) {
-        }
-        catch (Exception e2) {
+        catch (Exception e) {
             System.out.println("Checking out Book for the second time threw an unexpected exception");
             return false;
         }
-        // 3. Make sure checking out a nonexistent Book is not possible
+
+        // 2. Make sure checking out a nonexistent Book is not possible
         try {
-            myLibrary.checkOutBook("book4");
-            System.out.println("Checking out a nonexistent Book resulted in no exception");
+            if(myLibrary.checkOut("someBook")) {
+                System.out.println("Checking out a nonexistent Book returned true");
+                return false;
+            }
+        }
+        catch (Exception e) {
+            System.out.println("Checking out a nonexistent book resulted in an unexpected exception");
+            e.printStackTrace();
             return false;
         }
-        catch (IllegalArgumentException e1) {}
-        catch (Exception e2) {
-            System.out.println("Checking out a nonexistent book resulted in an unexpected exception");
+        return true;
+    }
+
+    /**
+     * FOR BACK END DEVELOPERS: Tests the checkIn functionality. Depends on checkOut working correctly
+     * @return false if the test fails, true otherwise
+     */
+    public static boolean checkInBookTest() {
+        LibraryDB myLibrary = new LibraryDB();
+        myLibrary.checkOut("To Kill a Mockingbird");
+        // 1. Try to return a book twice
+        if(!myLibrary.checkIn("To Kill a Mockingbird")) {
+            System.out.println("checkIn return false when returning out a checked-out Book");
+            return false;
+        }
+        // Return for a second time
+        try {
+            if(myLibrary.checkIn("To Kill a Mockingbird")) {
+                System.out.println("Trying to return Book for a second time returns true");
+                return false;
+            }
+        }
+        catch (Exception e) {
+            System.out.println("Returning Book for the second time threw an unexpected exception");
+            return false;
+        }
+        // 2. Try to return a nonexistent book
+        try {
+            if(myLibrary.checkIn("someBook")) {
+                System.out.println("Returning a nonexistent Book returned true");
+                return false;
+            }
+        }
+        catch (Exception e) {
+            System.out.println("Returning a nonexistent book resulted in an unexpected exception");
+            e.printStackTrace();
             return false;
         }
         return true;

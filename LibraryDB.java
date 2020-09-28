@@ -26,10 +26,12 @@ public class LibraryDB {
 		Book c = new Book("The Scarlet Letter", "Nathaniel Hawthorne", "Historical Fiction", 333);
 		Book d = new Book("Heart of Darkness", "Joseph Conrad", "Novel", 444);
 		Book e = new Book("To Kill a Mockingbird", "Harper Lee", "Fiction", 555);
-		firstBooks = new Book[] {a, b, c, d, e};
-		for(int i = 0; i < firstBooks.length; i++) {
-			addBook(firstBooks[i]);
-		}
+		
+		db.put(a.getTitle(),a);
+    		db.put(b.getTitle(),b);
+    		db.put(c.getTitle(),c);
+    		db.put(d.getTitle(),d);
+    		db.put(e.getTitle(),e);
 	}
   
 	/*
